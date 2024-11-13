@@ -1,0 +1,28 @@
+﻿<Window x:Class="GameManage.DetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Game Details" Height="400" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Banner Image -->
+        <Image x:Name="BannerImage" Grid.Row="0" Stretch="UniformToFill" />
+
+        <!-- Game Details Section -->
+        <StackPanel Grid.Row="1" Margin="10">
+            <TextBlock x:Name="GameTitle" FontSize="24" FontWeight="Bold" />
+            <TextBlock x:Name="GamePublisher" FontSize="16" Foreground="Gray" />
+            <TextBlock x:Name="GameReleaseDate" FontSize="14" Foreground="Gray" />
+        </StackPanel>
+
+        <!-- Description and Front Cover -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10">
+            <Image x:Name="FrontCoverImage" Width="120" Height="180" Stretch="UniformToFill" Margin="10"/>
+            <TextBlock x:Name="GameDescription" TextWrapping="Wrap" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</Window>

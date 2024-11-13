@@ -1,0 +1,17 @@
+﻿<Window x:Class="GameManage.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Game Manager" Height="720" Width="1280">
+    <DockPanel>
+        <!-- Add New Game Button -->
+        <Button Content="Add New Game" DockPanel.Dock="Top" Margin="10" Padding="5" 
+                HorizontalAlignment="Right" Click="AddNewGameButton_Click"/>
+
+        <!-- Game Display Area -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <WrapPanel x:Name="GameWrapPanel" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto">
+                <!-- Games will be added dynamically here -->
+            </WrapPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
