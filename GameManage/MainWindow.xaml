@@ -7,6 +7,34 @@
         <Button Content="Add New Game" DockPanel.Dock="Top" Margin="10" Padding="5" 
                 HorizontalAlignment="Right" Click="AddNewGameButton_Click"/>
 
+        <Grid Canvas.Left="300" Canvas.Top="19">
+            <Label Content="Name:" FontSize="16" Foreground="White" 
+           VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBox x:Name="NameSearchBox" Width="200" Height="30" 
+             Margin="60,0,0,0" FontSize="16"/>
+
+            <Label Content="Publisher:" FontSize="16" Foreground="White" 
+           VerticalAlignment="Center" Margin="289,0,-279,0"/>
+            <TextBox x:Name="PublisherSearchBox" Width="200" Height="30" 
+             Margin="380,20,-320,21" FontSize="16"/>
+        </Grid>
+
+        <Button Content="Search" Width="100" Height="30" Canvas.Left="912" Canvas.Top="40" 
+        Click="SearchButton_Click" Background="#FF254C3E" FontSize="16" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+        <ComboBox x:Name="SortComboBox" Width="200" Height="30" 
+  SelectionChanged="SortComboBox_SelectionChanged" 
+  Canvas.Left="1063" Canvas.Top="100" 
+  FontSize="16" FontFamily="Gill Sans Ultra Bold" 
+  Foreground="#FFC60000" Background="#FF254C3E">
+            <ComboBoxItem Content="Name A - Z" Tag="NameAsc" />
+            <ComboBoxItem Content="Name Z - A" Tag="NameDesc" />
+            <ComboBoxItem Content="Date Low - High" Tag="DateAsc" />
+            <ComboBoxItem Content="Date High - Low" Tag="DateDesc" />
+            <ComboBoxItem Content="Publisher A - Z" Tag="PublisherAsc" />
+            <ComboBoxItem Content="Publisher Z - A" Tag="PublisherDesc" />
+        </ComboBox>
+
         <!-- Game Display Area -->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <WrapPanel x:Name="GameWrapPanel" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto">

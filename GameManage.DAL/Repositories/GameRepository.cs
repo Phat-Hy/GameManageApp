@@ -11,7 +11,7 @@ namespace GameManage.DAL.Repositories
 {
     public class GameRepository
     {
-        private const string FilePath = "C:\\Users\\hypha\\OneDrive\\Documents\\PRN123\\GameManageApp\\game.js";  // Path to JSON file
+        private const string FilePath = "C:\\Users\\Mlxg\\source\\repos\\GameManageApp\\game.js";  // Path to JSON file
 
         // Load all games from JSON file
         public List<Game> LoadGames()
@@ -76,6 +76,37 @@ namespace GameManage.DAL.Repositories
                 games.Remove(gameToRemove);
                 SaveGames(games);
             }
+        }
+        public List<Game> Search(string name, string publisher)
+        {
+            var games = LoadGames();
+
+            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(publisher))
+                return games;
+
+            if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(publisher))
+                return games.Where(g => g.Name.ToLower().Contains(name.ToLower()) || g.Publisher.ToLower().Contains(publisher.ToLower())).ToList();
+
+            if (!string.IsNullOrWhiteSpace(name))
+                return games.Where(g => g.Name.ToLower().Contains(name.ToLower())).ToList();
+
+            return games.Where(g => g.Publisher.ToLower().Contains(publisher.ToLower())).ToList();
+        }
+
+        public List<Game> SortGames(string sortOrder)
+        {
+            var games = LoadGames();
+
+            return sortOrder switch
+            {
+                "NameAsc" => games.OrderBy(g => g.Name).ToList(),
+                "NameDesc" => games.OrderByDescending(g => g.Name).ToList(),
+                "DateAsc" => games.OrderBy(g => g.ReleaseDate).ToList(),
+                "DateDesc" => games.OrderByDescending(g => g.ReleaseDate).ToList(),
+                "PublisherAsc" => games.OrderBy(g => g.Publisher).ToList(),
+                "PublisherDesc" => games.OrderByDescending(g => g.Publisher).ToList(),
+                _ => games
+            };
         }
     }
 }
