@@ -33,8 +33,8 @@ namespace GameManage
                 // Create a border for each game
                 var gameBorder = new Border
                 {
-                    Width = 150,
-                    Height = 250,
+                    Width = 200,
+                    Height = 280,
                     Margin = new Thickness(10),
                     BorderBrush = Brushes.Black,  // Adding a visible border
                     BorderThickness = new Thickness(2),
@@ -158,14 +158,11 @@ namespace GameManage
             overlayGrid.Children.Add(playButton);
             overlayGrid.Children.Add(optionsMenu);
 
-            // Show overlay on mouse enter, hide on mouse leave
-            overlayGrid.MouseEnter += (s, e) =>
+            // Open the DetailWindow when the game border is clicked
+            overlayGrid.MouseDown += (s, e) =>
             {
-                overlayGrid.Visibility = Visibility.Visible;  // Ensure visibility is shown when mouse enters
-            };
-            overlayGrid.MouseLeave += (s, e) =>
-            {
-                overlayGrid.Visibility = Visibility.Collapsed;  // Hide visibility when mouse leaves
+                var detailWindow = new DetailWindow(game);
+                detailWindow.ShowDialog();
             };
 
             return overlayGrid;
@@ -198,5 +195,115 @@ namespace GameManage
             addUpdateWindow.ShowDialog();
             LoadGames(); // Refresh game list after adding a new game
         }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string name = NameSearchBox.Text.Trim();
+            string publisher = PublisherSearchBox.Text.Trim();
+
+            var filteredGames = _gameService.SearchByNameOrPublisher(name, publisher);
+
+            GameWrapPanel.Children.Clear();
+            foreach (var game in filteredGames)
+            {
+                Debug.WriteLine($"Game: {game.Name}");
+
+                var gameBorder = new Border
+                {
+                    Width = 200,
+                    Height = 280,
+                    Margin = new Thickness(10),
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(2),
+                    Tag = game
+                };
+
+                var frontCoverImage = GetImageFromBase64(game.FrontCover);
+                if (frontCoverImage != null)
+                {
+                    gameBorder.Background = new ImageBrush
+                    {
+                        ImageSource = frontCoverImage,
+                        Stretch = Stretch.UniformToFill
+                    };
+                }
+                else
+                {
+                    gameBorder.Background = new SolidColorBrush(Colors.Gray);
+                }
+
+                var overlayGrid = CreateOverlay(game);
+                gameBorder.Child = overlayGrid;
+
+                gameBorder.MouseEnter += (s, e) => overlayGrid.Visibility = Visibility.Visible;
+                gameBorder.MouseLeave += (s, e) => overlayGrid.Visibility = Visibility.Collapsed;
+
+                GameWrapPanel.Children.Add(gameBorder);
+            }
+
+            GameWrapPanel.InvalidateVisual();
+            GameWrapPanel.UpdateLayout();
+        }
+
+        private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SortComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string sortOrder = selectedItem.Tag.ToString();
+
+                // Sort the games based on the selected option
+                var sortedGames = _gameService.SortGames(sortOrder);
+
+                // Update the displayed games
+                GameWrapPanel.Children.Clear();
+                foreach (var game in sortedGames)
+                {
+                    AddGameToWrapPanel(game);
+                }
+            }
+        }
+        private void AddGameToWrapPanel(Game game)
+        {
+            // Create a border for each game
+            var gameBorder = new Border
+            {
+                Width = 200,
+                Height = 280,
+                Margin = new Thickness(10),
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(2),
+                Tag = game
+            };
+
+            var frontCoverImage = GetImageFromBase64(game.FrontCover);
+            if (frontCoverImage != null)
+            {
+                gameBorder.Background = new ImageBrush
+                {
+                    ImageSource = frontCoverImage,
+                    Stretch = Stretch.UniformToFill  // Ensures image scales properly
+                };
+            }
+            else
+            {
+                gameBorder.Background = new SolidColorBrush(Colors.Gray);
+            }
+
+            var overlayGrid = CreateOverlay(game);
+            gameBorder.Child = overlayGrid;
+
+            gameBorder.MouseEnter += (s, e) =>
+            {
+                overlayGrid.Visibility = Visibility.Visible;  // Show overlay when mouse enters the game border
+            };
+
+            gameBorder.MouseLeave += (s, e) =>
+            {
+                overlayGrid.Visibility = Visibility.Collapsed;  // Hide overlay when mouse leaves the game border
+            };
+
+            GameWrapPanel.Children.Add(gameBorder);
+        }
+
     }
 }

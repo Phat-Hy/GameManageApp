@@ -4,12 +4,15 @@ using System;
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace GameManage
 {
     public partial class AddUpdateWindow : Window
     {
         private readonly GameService _gameService;
+        public Game EditedOne { get; set; }
 
         public AddUpdateWindow()
         {
@@ -31,7 +34,7 @@ namespace GameManage
             if (openFileDialog.ShowDialog() == true)
             {
                 _frontCoverImagePath = openFileDialog.FileName;
-                FrontCoverFilePathTextBlock.Text = _frontCoverImagePath;  // Show file path
+                FrontCoverFilePathTextBlock.Text = _frontCoverImagePath;
             }
         }
 
@@ -45,7 +48,7 @@ namespace GameManage
             if (openFileDialog.ShowDialog() == true)
             {
                 _bannerImagePath = openFileDialog.FileName;
-                BannerImageFilePathTextBlock.Text = _bannerImagePath;  // Show file path
+                BannerImageFilePathTextBlock.Text = _bannerImagePath;
             }
         }
 
@@ -71,8 +74,9 @@ namespace GameManage
                 string frontCoverBase64 = string.IsNullOrEmpty(_frontCoverImagePath) ? string.Empty : ConvertImageToBase64(_frontCoverImagePath);
                 string bannerImageBase64 = string.IsNullOrEmpty(_bannerImagePath) ? string.Empty : ConvertImageToBase64(_bannerImagePath);
 
-                var newGame = new Game
+                var game = new Game
                 {
+                    Id = EditedOne?.Id ?? 0,  // If EditedOne is not null, use its Id for updates
                     Name = GameNameTextBox.Text,
                     Publisher = PublisherTextBox.Text,
                     ReleaseDate = ReleaseDatePicker.SelectedDate ?? DateTime.Now,
@@ -91,5 +95,61 @@ namespace GameManage
                 MessageBox.Show($"Error adding game: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (EditedOne != null)
+            {
+                GameNameTextBox.Text = EditedOne.Name;
+                PublisherTextBox.Text = EditedOne.Publisher;
+                ReleaseDatePicker.SelectedDate = EditedOne.ReleaseDate;
+                DescriptionTextBox.Text = EditedOne.Description;
+                ExePathTextBox.Text = EditedOne.ExePath;
+
+                // Set the front cover image
+                if (!string.IsNullOrEmpty(EditedOne.FrontCover))
+                {
+                    FrontCoverPreview.Source = GetImageFromBase64(EditedOne.FrontCover);
+                }
+
+                // Set the banner image
+                if (!string.IsNullOrEmpty(EditedOne.Banner))
+                {
+                    BannerImagePreview.Source = GetImageFromBase64(EditedOne.Banner);
+                }
+            }
+            // Set text fields and other properties
+            return;
+
+        }
+        private ImageSource GetImageFromBase64(string base64String)
+        {
+            if (string.IsNullOrEmpty(base64String))
+            {
+                return null;
+            }
+
+            try
+            {
+                byte[] imageBytes = Convert.FromBase64String(base64String);
+                using (var stream = new MemoryStream(imageBytes))
+                {
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = stream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    return bitmap;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading image: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
     }
 }
