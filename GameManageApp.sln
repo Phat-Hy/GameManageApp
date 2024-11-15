@@ -3,16 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameManage", "GameManage\GameManage.csproj", "{22E04DCC-F705-4C7F-9DD1-6CF214B99331}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameManage", "GameManage\GameManage.csproj", "{22E04DCC-F705-4C7F-9DD1-6CF214B99331}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameManage.DAL", "GameManage.DAL\GameManage.DAL.csproj", "{2E09F931-41E0-4FE5-8862-2F72578DE936}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameManage.DAL", "GameManage.DAL\GameManage.DAL.csproj", "{2E09F931-41E0-4FE5-8862-2F72578DE936}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameManage.BLL", "GameManage.BLL\GameManage.BLL.csproj", "{B4E950A1-AEA0-47F7-9FB6-991028C700D3}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{7EFACD3F-AA49-443A-BF86-67DE7A3F47C5}"
-	ProjectSection(SolutionItems) = preProject
-		game.js = game.js
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameManage.BLL", "GameManage.BLL\GameManage.BLL.csproj", "{B4E950A1-AEA0-47F7-9FB6-991028C700D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

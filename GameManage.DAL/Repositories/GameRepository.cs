@@ -2,16 +2,29 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
 namespace GameManage.DAL.Repositories
 {
     public class GameRepository
     {
-        private const string FilePath = "C:\\Users\\hypha\\OneDrive\\Documents\\PRN123\\GameManageApp\\game.js";
+        private static readonly string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "game.js");
+
+        public GameRepository()
+        {
+            InitializeFile();
+        }
+
+        private void InitializeFile()
+        {
+            if (!File.Exists(FilePath))
+            {
+                // Create the file with an empty JSON array if it doesn't exist
+                File.WriteAllText(FilePath, JsonConvert.SerializeObject(new List<Game>(), Formatting.Indented));
+            }
+        }
+
         // Load all games from JSON file
         public List<Game> LoadGames()
         {
@@ -25,7 +38,7 @@ namespace GameManage.DAL.Repositories
         // Save all games to JSON file
         public void SaveGames(List<Game> games)
         {
-            var jsonData = JsonConvert.SerializeObject(games, Newtonsoft.Json.Formatting.Indented);
+            var jsonData = JsonConvert.SerializeObject(games, Formatting.Indented);
             File.WriteAllText(FilePath, jsonData);
         }
 
@@ -76,6 +89,7 @@ namespace GameManage.DAL.Repositories
                 SaveGames(games);
             }
         }
+
         public List<Game> Search(string name, string publisher)
         {
             var games = LoadGames();
