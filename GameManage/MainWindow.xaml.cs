@@ -176,7 +176,12 @@ namespace GameManage
 
         private void EditGame(Game game)
         {
-            // Code to open an edit window
+            Game selected = game as Game;
+            MessageBox.Show("Game Choosen: " + selected.Name);
+            AddUpdateWindow addUpdateWindow = new AddUpdateWindow();
+            addUpdateWindow.EditedOne = selected;
+            addUpdateWindow.ShowDialog();
+            LoadGames();
         }
 
         private void DeleteGame(Game game)

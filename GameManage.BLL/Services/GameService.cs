@@ -56,5 +56,12 @@ namespace GameManage.BLL.Services
 
             _gameRepository.DeleteGame(id);
         }
+
+        public List<Game> SearchByNameOrPublisher(string name, string publisher)
+        {
+            return _gameRepository.Search(name, publisher);
+        }
+
+        public List<Game> SortGames(string sort) => _gameRepository.SortGames(sort);
     }
 }

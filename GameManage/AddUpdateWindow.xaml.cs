@@ -70,9 +70,14 @@ namespace GameManage
         {
             try
             {
-                // Convert images to Base64 if selected
-                string frontCoverBase64 = string.IsNullOrEmpty(_frontCoverImagePath) ? string.Empty : ConvertImageToBase64(_frontCoverImagePath);
-                string bannerImageBase64 = string.IsNullOrEmpty(_bannerImagePath) ? string.Empty : ConvertImageToBase64(_bannerImagePath);
+                // Convert images to Base64 if a new image is selected; otherwise, keep the existing one
+                string frontCoverBase64 = string.IsNullOrEmpty(_frontCoverImagePath)
+                    ? EditedOne?.FrontCover
+                    : ConvertImageToBase64(_frontCoverImagePath);
+
+                string bannerImageBase64 = string.IsNullOrEmpty(_bannerImagePath)
+                    ? EditedOne?.Banner
+                    : ConvertImageToBase64(_bannerImagePath);
 
                 var game = new Game
                 {
@@ -86,20 +91,31 @@ namespace GameManage
                     Banner = bannerImageBase64
                 };
 
-                _gameService.AddGame(newGame);
-                MessageBox.Show("Game added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (EditedOne != null)
+                {
+                    _gameService.UpdateGame(game); // Update the existing game
+                    MessageBox.Show("Game updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    _gameService.AddGame(game); // Add a new game
+                    MessageBox.Show("Game added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error adding game: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error saving game: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        
+
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            // Set text fields and other properties
             if (EditedOne != null)
             {
                 GameNameTextBox.Text = EditedOne.Name;
@@ -120,9 +136,7 @@ namespace GameManage
                     BannerImagePreview.Source = GetImageFromBase64(EditedOne.Banner);
                 }
             }
-            // Set text fields and other properties
             return;
-
         }
         private ImageSource GetImageFromBase64(string base64String)
         {
